@@ -1,0 +1,252 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Logistic Regression applied to Breast Cancer Wisconsin (Diagnostic) Data</title><meta name="generator" content="MATLAB 9.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-10-15"><meta name="DC.source" content="Publish_LogisticRegression.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Logistic Regression applied to Breast Cancer Wisconsin (Diagnostic) Data</h1><!--introduction--><p>We will use a logistic regression algorithm to train a model to be able to predict whether cells from a fine needle aspirate sample are derived from a malignant or benign tumor. We will use a training data set obtained from UCI Machine Learning Repository titled Breast Cancer Wisconsin (Diagnostic) Data Set (BCWD). The data is a collection of 30 predictors and a binary response variable describing the fine needle aspirate sample as being associated with a benign (B) or malignant (M) lesion.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Import Breast Cancer Wisconsin (diagnostic) data set</a></li><li><a href="#2">Organize our data</a></li><li><a href="#3">Evaluate the distribution of each attribute</a></li><li><a href="#4">Standardize data</a></li><li><a href="#5">Use the LogisticRegressionModelFcn to create model coefficient to fit our training data</a></li><li><a href="#6">Plot a confusion matrix</a></li><li><a href="#7">Creating a better logistic regression model</a></li></ul></div><h2 id="1">Import Breast Cancer Wisconsin (diagnostic) data set</h2><p>First we will import data from the UCI Machine Learning repository to a table variable, BCWD.</p><pre class="codeinput">path = websave(<span class="string">'BCWD.txt'</span>, <span class="string">'http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data'</span>);
+filename = path;
+delimiter = <span class="string">','</span>;
+formatSpec = <span class="string">'%f%C%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%[^\n\r]'</span>;
+fileID = fopen(filename,<span class="string">'r'</span>);
+dataArray = textscan(fileID, formatSpec, <span class="string">'Delimiter'</span>, delimiter, <span class="string">'TextType'</span>, <span class="string">'string'</span>,  <span class="string">'ReturnOnError'</span>, false);
+fclose(fileID);
+BCWD = table(dataArray{1:end-1}, <span class="string">'VariableNames'</span>, {<span class="string">'VarName1'</span>,<span class="string">'M'</span>,<span class="string">'VarName3'</span>,<span class="string">'VarName4'</span>,<span class="string">'VarName5'</span>,<span class="string">'VarName6'</span>,<span class="string">'VarName7'</span>,<span class="string">'VarName8'</span>,<span class="string">'VarName9'</span>,<span class="string">'VarName10'</span>,<span class="string">'VarName11'</span>,<span class="string">'VarName12'</span>,<span class="string">'VarName13'</span>,<span class="string">'VarName14'</span>,<span class="string">'VarName15'</span>,<span class="string">'VarName16'</span>,<span class="string">'VarName17'</span>,<span class="string">'VarName18'</span>,<span class="string">'VarName19'</span>,<span class="string">'VarName20'</span>,<span class="string">'VarName21'</span>,<span class="string">'VarName22'</span>,<span class="string">'VarName23'</span>,<span class="string">'VarName24'</span>,<span class="string">'VarName25'</span>,<span class="string">'VarName26'</span>,<span class="string">'VarName27'</span>,<span class="string">'VarName28'</span>,<span class="string">'VarName29'</span>,<span class="string">'VarName30'</span>,<span class="string">'VarName31'</span>,<span class="string">'VarName32'</span>});
+clearvars <span class="string">filename</span> <span class="string">delimiter</span> <span class="string">formatSpec</span> <span class="string">fileID</span> <span class="string">dataArray</span> <span class="string">ans</span>;
+</pre><h2 id="2">Organize our data</h2><p>The imported data is a 569x32 matrix.  The second column contains our response variable which defines the sample as benign (B) or malignant (M). We will binarize our response variables as well as create seperate training and test data sets.</p><pre class="codeinput">labels = BCWD(:,2);
+
+<span class="comment">% We will create seperate matrix containing predictor variable by deleting</span>
+<span class="comment">% the response variabls (labels) as well as the first column which is an ID number for the sample</span>
+
+BCWD(:,1:2) = [];
+bc = table2array(BCWD);
+
+<span class="comment">% Let's take every 3rd row an make it part of our test data. The other</span>
+<span class="comment">% 2/3rds of the data will be used to train our model.</span>
+
+test = bc(1:3:end, :);
+idx = ismember(bc, test, <span class="string">'rows'</span>);
+train = bc(~idx, :);
+testlabels = labels(idx, 1);
+trainlabels = labels(~idx, 1);
+
+<span class="comment">% 'M' will be equal to 1 and 'B' will be equal to 0.</span>
+testlabels = testlabels{:, 1} == <span class="string">'M'</span>;
+trainlabels = trainlabels{:, 1} == <span class="string">'M'</span>;
+</pre><h2 id="3">Evaluate the distribution of each attribute</h2><p>we can apply transformations at a later time to create a guasian distribution to specific variables and potentially improve our predictive model</p><pre class="codeinput"><span class="keyword">for</span> i = 1:size(train, 2)
+
+    ax(i) = subplot(floor(sqrt(size(train, 2))),ceil(sqrt(size(train, 2))),i);
+    h(i) = histogram(train(:, i), 20);
+    hold <span class="string">on</span>
+
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Publish_LogisticRegression_01.png" alt=""> <h2 id="4">Standardize data</h2><p>We will standardize our data (mean = 0, stdev = 1) to satify an assumption for our logistic model that there is equal variance across attributes.</p><pre class="codeinput">train = zscore(train);
+test = zscore(test);
+</pre><h2 id="5">Use the LogisticRegressionModelFcn to create model coefficient to fit our training data</h2><p><img src="Publish_LogisticRegression_eq12378883443304080146.png" alt="$p(X = 0) = 1/1+e^{-\beta x0 + \beta x1};$"> We will use the LogisticRegressionModelFcn provided here to train our model.  We will set our alpha value to 0.3 and iterate throuh our data 10 times initially.  These values can be changed on successive training attempts to improve the accuracy of our model.</p><pre class="codeinput">[beta, accuracy] = LogisticRegressionModelFcn(train, trainlabels, 0.3, 10);
+</pre><img vspace="5" hspace="5" src="Publish_LogisticRegression_02.png" alt=""> <h2 id="6">Plot a confusion matrix</h2><p>The y-axis(Output Class) represents predicted classes. While the x-axis (Target Class) represents the true classes for the test data. The diagonal squares show the number of correctly predicted observations while the off diagonal squares illustrate incorrect classifications.  The For the current model 21 (11.1%) of samples were correctly identified as malignant and 114 (60.0%) were correctly identified as benign.  This corresponds to 71.1% accuracy of our model for the test data.   55 (28.9%) malignant samples were incorrectly classified as benign with only 27.6% malignant samples being correctly identified.  Unfortunately our model is not very sensitive given that a number of malignancies are overlooked.</p><pre class="codeinput">prediction = logisticRegressionPredict(beta, test);
+
+correctlyIdentified = sum(all(prediction == testlabels, 2));
+accuracy = correctlyIdentified/length(testlabels);
+
+<span class="comment">% Make confusion matrix</span>
+
+testlabels = [testlabels'; ~testlabels'];
+prediction = [prediction'; ~prediction'];
+figure;
+plotconfusion(testlabels, prediction)
+set(gca, <span class="string">'xticklabel'</span>, {<span class="string">'Malignant'</span>, <span class="string">'Benign'</span>, <span class="string">''</span>})
+xtickangle(45)
+
+set(gca, <span class="string">'yticklabel'</span>, {<span class="string">'Malignant'</span>, <span class="string">'Benign'</span>, <span class="string">''</span>})
+ytickangle(45)
+
+<span class="comment">% Plot a ROC curve to see how well we have done</span>
+</pre><img vspace="5" hspace="5" src="Publish_LogisticRegression_03.png" alt=""> <h2 id="7">Creating a better logistic regression model</h2><p>There are several ways that we can begin to tweak our model to increase its sentivity.  Getting ~100% accuracy on our training data likely won't take much effort.  We can increase the the  number of epochs that we iterate through the training data and make corrections to our coeffiecients to better fit our model to the data alter the correction coefficient.  However, the objective is to create a model that will apply to various test sets rather then overfitting our model Some feature engineering is required.  We can begin to look more closely at our data and isolate particular predictors that may be more effectively used to create a model than all predicotrs combined.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Logistic Regression applied to Breast Cancer Wisconsin (Diagnostic) Data
+% We will use a logistic regression algorithm to train a model to be able 
+% to predict whether cells from a fine needle aspirate sample are derived
+% from a malignant or benign tumor. 
+% We will use a training data set obtained from UCI Machine Learning
+% Repository titled Breast Cancer Wisconsin (Diagnostic) Data Set (BCWD).  
+% The data is a collection of 30 predictors and a binary
+% response variable describing the fine needle aspirate sample as being 
+% associated with a benign (B) or malignant (M) lesion.
+
+%% Import Breast Cancer Wisconsin (diagnostic) data set
+% First we will import data from the UCI Machine Learning repository to a
+% table variable, BCWD.
+
+path = websave('BCWD.txt', 'http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data');
+filename = path;
+delimiter = ',';
+formatSpec = '%f%C%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%f%[^\n\r]';
+fileID = fopen(filename,'r');
+dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string',  'ReturnOnError', false);
+fclose(fileID);
+BCWD = table(dataArray{1:end-1}, 'VariableNames', {'VarName1','M','VarName3','VarName4','VarName5','VarName6','VarName7','VarName8','VarName9','VarName10','VarName11','VarName12','VarName13','VarName14','VarName15','VarName16','VarName17','VarName18','VarName19','VarName20','VarName21','VarName22','VarName23','VarName24','VarName25','VarName26','VarName27','VarName28','VarName29','VarName30','VarName31','VarName32'});
+clearvars filename delimiter formatSpec fileID dataArray ans;
+
+%% Organize our data
+% The imported data is a 569x32 matrix.  The second column contains our
+% response variable which defines the sample as benign (B) or malignant
+% (M). We will binarize our response variables as well as create seperate
+% training and test data sets.
+
+labels = BCWD(:,2);
+
+% We will create seperate matrix containing predictor variable by deleting 
+% the response variabls (labels) as well as the first column which is an ID number for the sample
+
+BCWD(:,1:2) = [];
+bc = table2array(BCWD);
+
+% Let's take every 3rd row an make it part of our test data. The other
+% 2/3rds of the data will be used to train our model.
+
+test = bc(1:3:end, :);
+idx = ismember(bc, test, 'rows');
+train = bc(~idx, :);
+testlabels = labels(idx, 1);
+trainlabels = labels(~idx, 1);
+
+% 'M' will be equal to 1 and 'B' will be equal to 0.
+testlabels = testlabels{:, 1} == 'M';
+trainlabels = trainlabels{:, 1} == 'M';
+
+%% Evaluate the distribution of each attribute 
+% we can apply transformations at a later time to create a guasian 
+% distribution to specific variables and potentially improve our predictive
+% model
+
+for i = 1:size(train, 2)
+    
+    ax(i) = subplot(floor(sqrt(size(train, 2))),ceil(sqrt(size(train, 2))),i);
+    h(i) = histogram(train(:, i), 20);
+    hold on
+    
+end
+
+
+%% Standardize data
+% We will standardize our data (mean = 0, stdev = 1) to satify an 
+% assumption for our logistic model that there is equal variance across 
+% attributes.
+
+train = zscore(train);
+test = zscore(test);
+
+%% Use the LogisticRegressionModelFcn to create model coefficient to fit our training data
+% $p(X = 0) = 1/1+e^{-\beta x0 + \beta x1};$ 
+% We will use the LogisticRegressionModelFcn provided
+% here to train our model.  We will set our alpha value to 0.3 and iterate 
+% throuh our data 10 times initially.  These values can be changed on
+% successive training attempts to improve the accuracy of our model.
+
+[beta, accuracy] = LogisticRegressionModelFcn(train, trainlabels, 0.3, 10);
+
+%% Plot a confusion matrix
+% The y-axis(Output Class) represents predicted classes. While the x-axis
+% (Target Class) represents the true classes for the test data.
+% The diagonal squares show the number of correctly predicted observations
+% while the off diagonal squares illustrate incorrect classifications.  The
+% For the current model 21 (11.1%) of samples were correctly identified as
+% malignant and 114 (60.0%) were correctly identified as benign.  This
+% corresponds to 71.1% accuracy of our model for the test data.   55 (28.9%)
+% malignant samples were incorrectly classified as benign with only 27.6%
+% malignant samples being correctly identified.  Unfortunately our model is
+% not very sensitive given that a number of malignancies are overlooked.
+
+prediction = logisticRegressionPredict(beta, test);
+
+correctlyIdentified = sum(all(prediction == testlabels, 2));
+accuracy = correctlyIdentified/length(testlabels);
+
+% Make confusion matrix
+
+testlabels = [testlabels'; ~testlabels'];
+prediction = [prediction'; ~prediction'];
+figure;
+plotconfusion(testlabels, prediction)
+set(gca, 'xticklabel', {'Malignant', 'Benign', ''})
+xtickangle(45)
+
+set(gca, 'yticklabel', {'Malignant', 'Benign', ''})
+ytickangle(45)
+
+% Plot a ROC curve to see how well we have done
+%% Creating a better logistic regression model
+% There are several ways that we can begin to tweak our model to increase
+% its sentivity.  Getting ~100% accuracy on our training data likely won't take 
+% much effort.  We can increase the the  number of epochs that we iterate 
+% through the training data and make corrections to our coeffiecients to better
+% fit our model to the data alter the correction coefficient.  However, the objective is to create a model
+% that will apply to various test sets rather then overfitting our model 
+% Some feature engineering is required.  We can 
+% begin to look more closely at our data and isolate particular predictors 
+% that may be more effectively used to create a model than all predicotrs 
+% combined.
+##### SOURCE END #####
+--></body></html>
